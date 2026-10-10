@@ -1,0 +1,46 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f8fa" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <title>فاکتورساز — مدیریت ساده و حرفه‌ای فاکتورها</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a href="#dashboard" class="brand"><span class="brand-mark">ف</span><span class="brand-name">فاکتور<span>ساز</span><small>مدیریت کسب‌وکار شما</small></span></a>
+      <div class="workspace-label">فضای کاری</div>
+      <nav class="nav-list" aria-label="منوی اصلی">
+        <button class="nav-item active" data-page="dashboard"><span class="nav-icon">▦</span> نمای کلی</button>
+        <button class="nav-item" data-page="invoices"><span class="nav-icon">▤</span> فاکتورها <span class="nav-count" id="invoice-count">۰</span></button>
+        <button class="nav-item" data-page="customers"><span class="nav-icon">♙</span> مشتریان</button>
+        <button class="nav-item" data-page="products"><span class="nav-icon">▣</span> کالا و خدمات</button>
+        <button class="nav-item" data-page="reports"><span class="nav-icon">◩</span> گزارش‌ها</button>
+        <button class="nav-item" data-page="templates"><span class="nav-icon">▧</span> قالب فاکتور</button>
+        <a class="nav-item" href="/about.html"><span class="nav-icon">ⓘ</span> درباره ما</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="pro-card"><div class="pro-icon">✦</div><strong>با فاکتور Pro حرفه‌ای‌تر شوید</strong><p>دانلود نامحدود PDF و دسترسی به همه امکانات</p><button class="pro-link" data-page="settings">مشاهده امکانات <span>←</span></button></div>
+        <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span> تنظیمات</button>
+        <div class="account-mini"><div class="avatar">ف</div><div><strong>حساب کاربری لازم نیست</strong><small>داده‌ها روی دستگاه شما</small></div></div>
+      </div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><button class="mobile-menu" id="mobile-menu" aria-label="باز کردن منو">☰</button><div class="breadcrumb">فضای کاری <span>/</span> <strong id="page-title">نمای کلی</strong></div><div class="top-actions"><span class="save-status"><i></i> اطلاعات روی دستگاه شما ذخیره می‌شود</span><button class="icon-button" id="export-button" title="خروجی اطلاعات">⇧</button><button class="avatar top-avatar">م</button></div></header>
+      <div class="content" id="content"></div>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <dialog id="invoice-dialog" class="dialog"><form id="invoice-form" method="dialog"><div class="dialog-head"><div><span class="eyebrow">فاکتور جدید</span><h2>اطلاعات فاکتور را وارد کنید</h2></div><button type="button" class="close-dialog" data-close>×</button></div><div class="form-grid"><label>نوع فاکتور<select name="type"><option value="sale">فاکتور فروش</option><option value="proforma">پیش‌فاکتور</option><option value="purchase">فاکتور خرید</option></select></label><label>مشتری<select name="customer" id="customer-select"><option value="">انتخاب مشتری</option></select></label><label>تاریخ صدور<input name="date" type="text" /></label><label>سررسید پرداخت<input name="due" type="text" placeholder="۱۴۰۵/۰۷/۳۰" /></label></div><div class="line-items-head"><strong>اقلام فاکتور</strong><span>واحد پول: تومان</span></div><div id="invoice-lines"></div><button type="button" class="add-line" id="add-line">＋ افزودن ردیف جدید</button><div class="invoice-form-bottom"><label class="note-label">توضیحات<textarea name="note" rows="2" placeholder="توضیحات تکمیلی برای مشتری..."></textarea></label><div class="totals-box"><div><span>جمع جزء</span><strong id="subtotal">۰ تومان</strong></div><div><span>تخفیف</span><label class="discount-input"><input name="discount" type="number" min="0" value="0" /><span>تومان</span></label></div><div><span>مالیات</span><label class="tax-check"><input name="tax" type="checkbox" /> نرخ تنظیمات</label></div><div class="grand-total"><span>مبلغ قابل پرداخت</span><strong id="grand-total">۰ تومان</strong></div></div></div><div class="dialog-actions"><button type="button" class="button button-quiet" data-close>انصراف</button><button type="submit" class="button button-primary">ذخیره پیش‌نویس</button></div></form></dialog>
+  <script src="database.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<title>درباره ما | NOISEMIND</title>
+<style>
+  /* ───── NOISEMIND · About page ─────
+     فایل مستقل و سبک. فونت: Vazirmatn اگر موجود باشد، وگرنه فونت سیستم. */
+  :root{
+    color-scheme: dark;
+    --ink:#101010;
+    --bone:#f4f4f1;
+    --soft:#cfd1d0;
+    --mute:#9a9d9c;
+    --line:rgba(244,244,241,.18);
+    --r:28px;
+    --font:"Vazirmatn","Vazir","IRANSansX","IRANSans",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+    --latin:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+  *,*::before,*::after{box-sizing:inherit}
+  body{
+    margin:0;min-height:100%;
+    background:var(--ink);color:var(--soft);
+    font:400 1rem/1.95 var(--font);
+    -webkit-text-size-adjust:100%;
+  }
+  :focus-visible{outline:2px solid var(--bone);outline-offset:3px;border-radius:6px}
+  [hidden]{display:none!important}
+
+  /* میدان ذرات: یک بوم ثابت پشت کل صفحه */
+  #field{
+    position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;
+    z-index:0;pointer-events:none;display:block;
+  }
+  .top,main,.foot{position:relative;z-index:1}
+
+  /* دکمه‌های گرد */
+  .pill{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:44px;padding:0 1.1rem;
+    border:1.5px solid var(--line);border-radius:999px;background:transparent;
+    color:var(--bone);font:inherit;font-size:.9rem;line-height:1;
+    text-decoration:none;cursor:pointer;
+    transition:background-color .2s,color .2s,border-color .2s;
+  }
+  .pill[aria-pressed="true"]{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+
+  .top{
+    display:flex;align-items:center;gap:.75rem;
+    padding:1rem 1.25rem 0;min-height:3.5rem;z-index:2;
+  }
+  #snd{margin-inline-start:auto}
+
+  /* ═════ هیرو ═════ */
+  .hero{
+    --o:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    min-height:560px;min-height:calc(100svh - 3.5rem);
+    padding:1rem 1.5rem 2.5rem;
+  }
+  .logo-slot{width:min(52vw,230px);aspect-ratio:433/379;margin-bottom:2rem}
+  .logo{display:block;width:100%;height:100%;color:var(--bone)}
+  .logo path{fill:currentColor}
+  .field-on .logo{visibility:hidden}   /* وقتی ذرات فعال‌اند، SVG فقط جای لوگو را نگه می‌دارد */
+
+  .wordmark{
+    margin:0 0 1.1rem;
+    font:800 .85rem/1 var(--latin);
+    letter-spacing:.5em;padding-left:.5em;color:var(--bone);
+    transition:opacity .6s;
+  }
+  .hero.as-text .wordmark{opacity:0}
+  .wn,.wm{display:inline-block}
+  .wn{opacity:calc(1 - .5*var(--o));animation:jit 1.2s steps(1) infinite}
+  .wm{opacity:calc(.5 + .5*var(--o))}
+  .hero.noisy .wn{animation-duration:.28s}
+  @keyframes jit{
+    0%{transform:translate(0,0)} 20%{transform:translate(.8px,-.6px)}
+    40%{transform:translate(-.7px,.5px)} 60%{transform:translate(.4px,.7px)}
+    80%{transform:translate(-.6px,-.4px)} 100%{transform:translate(0,0)}
+  }
+
+  h1{
+    margin:0;max-width:22ch;text-wrap:balance;color:var(--bone);
+    font-size:clamp(1.75rem,7vw,2.5rem);font-weight:800;line-height:1.5;
+  }
+  .sub{margin:.9rem 0 0;color:var(--mute)}
+
+  /* اسلایدر نویز ↔ ذهن */
+  .mixer{
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.9rem;
+    width:min(100%,22rem);margin-top:2.25rem;color:var(--mute);font-size:.9rem;
+  }
+  #mix{
+    -webkit-appearance:none;appearance:none;width:100%;height:44px;margin:0;
+    background:transparent;cursor:grab;
+  }
+  #mix:active{cursor:grabbing}
+  #mix::-webkit-slider-runnable-track{
+    height:2px;border-radius:2px;
+    background:linear-gradient(to right,var(--bone) var(--p,0%),var(--line) var(--p,0%));
+  }
+  #mix::-moz-range-track{height:2px;border-radius:2px;background:var(--line)}
+  #mix::-moz-range-progress{height:2px;background:var(--bone)}
+  #mix::-webkit-slider-thumb{
+    -webkit-appearance:none;width:30px;height:30px;margin-top:-14px;border-radius:50%;
+    background:var(--ink);border:2.5px solid var(--bone);
+  }
+  #mix::-moz-range-thumb{
+    box-sizing:border-box;width:30px;height:30px;border-radius:50%;
+    background:var(--ink);border:2.5px solid var(--bone);
+  }
+  #mix:focus-visible{outline:none}
+  #mix:focus-visible::-webkit-slider-thumb{outline:2px solid var(--bone);outline-offset:3px}
+  #mix:focus-visible::-moz-range-thumb{outline:2px solid var(--bone);outline-offset:3px}
+  .hint{margin:.25rem 0 0;color:var(--mute);font-size:.82rem}
+  #motion{margin-top:.9rem}
+
+  /* حالت بدون حرکت: لوگوی ثابت، بدون اسلایدر و صدا */
+  .calm .mixer,.calm .hint,.calm #field,.calm #snd,.calm #motion{display:none}
+
+  /* ═════ بخش‌ها ═════ */
+  .block{max-width:38rem;margin-inline:auto;padding:2.25rem 1.5rem}
+  h2{margin:0 0 .9rem;color:var(--bone);font-size:1.2rem;font-weight:700;line-height:1.6}
+  .block p{margin:0}
+
+  /* نویز | ذهن: نیمه‌ی چپ آشوب، نیمه‌ی راست نظم؛ هم‌جهت با لوگو و نام */
+  .split{
+    direction:ltr;
+    display:grid;grid-template-columns:1fr 1fr;
+    border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;
+  }
+  .half{position:relative;direction:rtl;padding:1.25rem 1.1rem 1.4rem}
+  .half::before{content:"";position:absolute;inset:0;pointer-events:none}
+  .half>*{position:relative}
+  .half.noise::before{background-image:var(--grain);opacity:.17;animation:tv .6s steps(1) infinite}
+  .half.mind{border-left:1.5px solid var(--line)}
+  .half.mind::before{
+    background-image:radial-gradient(circle,rgba(244,244,241,.4) 1px,transparent 1.6px);
+    background-size:14px 14px;opacity:.5;
+  }
+  @keyframes tv{
+    0%{background-position:0 0} 25%{background-position:-37px 21px}
+    50%{background-position:19px -43px} 75%{background-position:-52px -9px} 100%{background-position:0 0}
+  }
+  .half h3{margin:0 0 .4rem;color:var(--bone);font-size:1.05rem;font-weight:800}
+  .half p{color:var(--soft);font-size:.93rem;line-height:1.9}
+  /* صحنه‌ی ذرات: جایی که نیمه‌های لوگو بعد از اسکرول فرود می‌آیند */
+  .stage{display:none}
+  .field-on .stage{display:block;height:96px;margin-top:1rem}
+  .field-on .half::before{display:none}
+  @media (max-width:340px){
+    .split{grid-template-columns:1fr}
+    .half.mind{border-left:0;border-top:1.5px solid var(--line)}
+  }
+
+  /* خدمات */
+  .rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line)}
+  .rows li{padding:1rem 0;border-top:1px solid var(--line)}
+  .rows strong{display:block;color:var(--bone);font-weight:700}
+  .rows span{color:var(--mute);font-size:.95rem}
+
+  /* ارتباط */
+  .links{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.6rem}
+  .links a{
+    display:inline-flex;align-items:center;min-height:44px;padding:0 1.2rem;
+    border:1.5px solid var(--line);border-radius:999px;
+    color:var(--bone);text-decoration:none;
+    transition:background-color .2s,color .2s,border-color .2s;
+  }
+  .links a:hover{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+
+  /* پاورقی */
+  .foot{
+    max-width:38rem;margin:1.5rem auto 0;padding:2rem 1.5rem 3rem;
+    border-top:1px solid var(--line);color:var(--mute);font-size:.9rem;
+  }
+  .foot p{margin:0}
+  .foot b{color:var(--bone);font-family:var(--latin);letter-spacing:.12em}
+  .foot .meta{margin-top:.25rem}
+
+  @media (prefers-reduced-motion:reduce){
+    .wn,.half.noise::before{animation:none}
+    .links a,.pill,.wordmark{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+
+<header class="top">
+  <a id="back" class="pill" hidden>بازگشت</a>
+  <button id="snd" class="pill" type="button" aria-pressed="false" hidden>صدا: خاموش</button>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="logo-slot" id="slot" role="img" aria-label="لوگوی NOISEMIND">
+      <svg class="logo" viewBox="0 0 432.8 379.2" aria-hidden="true" focusable="false">
+        <path d="M128.2 108.2 124 108.8 121 109.8 114.8 113.8 110.2 119 108.5 122.8 107.5 126.5 107.2 251.5 138 282.5 138.8 282.8 139.2 282 139.2 109.2 138.8 108.2ZM155.5 0 147.8 1 142.8 2.8 141.8 2.8 135 6 129.2 10 83 55.5 55.5 83 53.5 85.5 50.2 90.5 49.2 93.5 48.2 95 45.5 104.8 45 130 45.2 163 44 164 0.5 164 0 164.8 0 195.8 0.5 196.2 44.5 196 45.2 197 45.2 251 49.2 255.5 58.5 264.5 76.8 264.5 77.2 263.8 77 113.2 77.2 110.8 78.2 107.5 81 103.2 89.2 95.5 150.5 34.5 155 32.5 160 32.5 162.8 33.5 166.2 36.5 168 39 169 42 169 337.2 167.2 341.5 164.5 344.5 160.8 346.5 156 346.8 152.2 345.5 148.5 342.5 100.8 294.8 55.2 295 55.5 295.8 106.5 346 126.5 366.5 131.2 370.5 135.8 373.5 140.2 375.8 144.5 377.2 146.8 377.5 149.8 378.5 161 379 166.8 378.5 175.2 375.5 181.5 372.2 187.8 367.2 191.8 362.8 195.8 356.5 198.8 350 200.8 342.2 201 38 199 29.8 196.8 24 194 19.5 190.8 15.2 185.5 10 178 5 171 2 166 0.8Z"/>
+        <path d="M294 108.2 293.5 109.2 293.5 282 294 282.8 294.8 282.5 325.5 251.5 325.2 126.5 324.2 122.8 322.5 119 318 113.8 311.8 109.8 308.8 108.8 304.5 108.2ZM266.8 0.8 261.8 2 254.8 5 247.2 10 242 15.2 238.8 19.5 236 24 233.8 29.8 231.8 38 232 342.2 234 350 237 356.5 241 362.8 245 367.2 251.2 372.2 257.5 375.5 266 378.5 271.8 379 283 378.5 286 377.5 288.2 377.2 292.5 375.8 297 373.5 301.5 370.5 306.2 366.5 326.2 346 377.2 295.8 377.5 295 332 294.8 284.2 342.5 280.5 345.5 276.8 346.8 272 346.5 268.2 344.5 265.5 341.5 263.8 337.2 263.8 42 264.8 39 266.5 36.5 270 33.5 272.8 32.5 277.8 32.5 282.2 34.5 343.5 95.5 351.8 103.2 354.5 107.5 355.5 110.8 355.8 113.2 355.5 263.8 356 264.5 374.2 264.5 383.5 255.5 387.5 251 387.5 197 388.2 196 432.2 196.2 432.8 195.8 432.8 164.8 432.2 164 388.8 164 387.5 163 387.8 130 387.2 104.8 384.5 95 383.5 93.5 382.5 90.5 379.2 85.5 377.2 83 349.8 55.5 303.5 10 297.8 6 291 2.8 290 2.8 285 1 277.2 0Z"/>
+      </svg>
+    </div>
+
+    <p class="wordmark" dir="ltr"><span class="wn">NOISE</span><span class="wm">MIND</span></p>
+    <h1>از هیاهو، وضوح می‌سازیم.</h1>
+    <p class="sub">استودیوی توسعه وب‌اپلیکیشن‌های PWA</p>
+
+    <div class="mixer" dir="ltr">
+      <span>نویز</span>
+      <input id="mix" type="range" min="0" max="100" step="1" value="0" aria-label="میزان نظم، از نویز تا ذهن">
+      <span>ذهن</span>
+    </div>
+    <p class="hint">اسلایدر را بکش، روی لوگو دست بکش یا یک ضربه بزن.</p>
+    <p class="hint" id="hint2" hidden>گوشی را هم تکان بده.</p>
+    <button id="motion" class="pill" type="button" hidden>فعال‌سازی تکان گوشی</button>
+  </section>
+
+  <section class="block">
+    <h2>ما که هستیم؟</h2>
+    <p>NOISEMIND یک استودیوی متمرکز است که یک کار را عمیق انجام می‌دهد: ساختن وب‌اپلیکیشن‌های PWA. اپ‌هایی که مثل اپ بومی نصب می‌شوند، بدون اینترنت هم کار می‌کنند و از همان ثانیه‌ی اول سریع‌اند.</p>
+  </section>
+
+  <section class="block">
+    <h2>نام ما یعنی چه؟</h2>
+    <div class="split">
+      <div class="half noise">
+        <h3>نویز</h3>
+        <p>نیازهای پراکنده، ایده‌های نیمه‌کاره و محدودیت‌های فنی.</p>
+        <div class="stage" aria-hidden="true"></div>
+      </div>
+      <div class="half mind">
+        <h3>ذهن</h3>
+        <p>ساختار، سادگی و محصولی که نیازی به توضیح ندارد.</p>
+        <div class="stage" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>چه می‌سازیم؟</h2>
+    <ul class="rows">
+      <li><strong>وب‌اپلیکیشن PWA</strong><span>نصب‌پذیر روی موبایل و دسکتاپ، با یک کدبیس.</span></li>
+      <li><strong>آفلاین‌اول</strong><span>سرویس‌ورکر و کش هوشمند؛ اپ بدون اینترنت هم باز می‌شود.</span></li>
+      <li><strong>سریع و سبک</strong><span>بارگذاری روان، حتی روی اینترنت ضعیف.</span></li>
+      <li><strong>رابط روشن</strong><span>طراحی ساده که کاربر را بدون راهنما به هدفش می‌رساند.</span></li>
+    </ul>
+  </section>
+
+  <section class="block" id="contact" hidden>
+    <h2>ارتباط با ما</h2>
+    <ul class="links" id="links"></ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>این اپ را <b dir="ltr">NOISEMIND</b> ساخته است.</p>
+  <p class="meta" id="meta" hidden></p>
+</footer>
+
+<script>
+/* ───── تنظیمات هر پروژه ─────
+   فقط همین بخش را برای هر پروژه عوض کن.
+   مقدار خالی = آن بخش نمایش داده نمی‌شود. */
+const NOISEMIND = {
+  project: "Factorino",   // نام پروژه، مثلاً «اپ رزرو نوبت»
+  version: "1.0.0",   // مثلاً "1.0.0"
+  backHref: "/",  // مسیر بازگشت؛ اگر خالی باشد از تاریخچه‌ی مرورگر استفاده می‌شود
+  links: {       // لینک کامل (https://...)؛ برای ایمیل فقط آدرس ایمیل
+    website: "",
+    email: "",
+    telegram: "",
+    instagram: "",
+    github: "",
+    linkedin: ""
+  }
+};
+
+/* ───── صفحه: بازگشت، لینک‌ها، پاورقی ───── */
+(function(){
+  const fa = n => Number(n).toLocaleString("fa-IR",{useGrouping:false});
+
+  const back = document.getElementById("back");
+  if (NOISEMIND.backHref) {
+    back.href = NOISEMIND.backHref; back.hidden = false;
+  } else if (history.length > 1) {
+    back.href = "#"; back.hidden = false;
+    back.addEventListener("click", e => { e.preventDefault(); history.back(); });
+  }
+
+  const labels = {website:"وب‌سایت",email:"ایمیل",telegram:"تلگرام",instagram:"اینستاگرام",github:"گیت‌هاب",linkedin:"لینکدین"};
+  const list = document.getElementById("links");
+  Object.keys(labels).forEach(k => {
+    let v = (NOISEMIND.links[k] || "").trim();
+    if (!v) return;
+    if (k === "email" && !/^mailto:/i.test(v)) v = "mailto:" + v;
+    const li = document.createElement("li"), a = document.createElement("a");
+    a.href = v; a.textContent = labels[k];
+    if (!/^mailto:/i.test(v)) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+    li.appendChild(a); list.appendChild(li);
+  });
+  if (list.children.length) document.getElementById("contact").hidden = false;
+
+  const parts = [];
+  if (NOISEMIND.project) parts.push("پروژه: " + NOISEMIND.project);
+  if (NOISEMIND.version) parts.push("نسخه " + NOISEMIND.version);
+  parts.push("© " + fa(new Date().getFullYear()));
+  const meta = document.getElementById("meta");
+  meta.textContent = parts.join("  |  "); meta.hidden = false;
+})();
+
+/* ───── میدان نویز → ذهن ─────
+   • لوگو از هزاران ذره ساخته می‌شود. «o» میزان نظم است (۰ = نویز، ۱ = ذهن).
+   • اسلایدر، لمس، ضربه (لوگو ↔ نام)، تکان گوشی و صدا روی همین میدان اثر می‌گذارند.
+   • با اسکرول، نیمه‌ی چپ لوگو (NOISE) به صحنه‌ی آشوب و نیمه‌ی راست (MIND) به شبکه‌ی منظم می‌ریزد. */
+(function(){
+  const root = document.documentElement;
+  const $ = id => document.getElementById(id);
+  const hero=$("hero"), cv=$("field"), slot=$("slot"), mix=$("mix"),
+        hint2=$("hint2"), motionBtn=$("motion"), sndBtn=$("snd");
+  const splitEl = document.querySelector(".split");
+  const stL = document.querySelector(".noise .stage"), stR = document.querySelector(".mind .stage");
+  const ctx = cv.getContext && cv.getContext("2d");
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (calm || !ctx || !window.Path2D) { root.classList.add("calm"); return; }
+  root.classList.add("field-on");
+  sndBtn.hidden = false;
+
+  const clamp = (v,a=0,b=1) => v<a ? a : v>b ? b : v;
+  const sstep = (a,b,x) => { const t = clamp((x-a)/(b-a)); return t*t*(3-2*t); };
+  const shuffle = a => { for (let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+  const VBW  = slot.querySelector("svg").viewBox.baseVal.width;
+  const LOGO = new Path2D([...slot.querySelectorAll("path")].map(p => p.getAttribute("d")).join(""));
+  const lowEnd = (navigator.hardwareConcurrency||8) <= 4 || (navigator.deviceMemory||8) <= 3;
+
+  /* حالت‌ها */
+  let o = 0;                 // نظم تنظیم‌شده (اسلایدر/شروع خودکار)
+  let shake = 0;             // تکان گوشی ۰..۱
+  let oe = 0;                // نظم مؤثر = o × (۱ − shake)
+  let m = 0, mT = 0;         // لوگو (۰) ↔ نام (۱)
+  let hv = 1, sp = 0;        // دیده‌شدن هیرو / صحنه‌ی نویز|ذهن
+  const auto = { on:true, t0:0, delay:500, dur:3400 };
+  const ptr  = { on:false, cx:0, cy:0 };
+  let dragging = false, down = null, lastV = "", lastNoisy = null;
+
+  /* ذرات */
+  let W=0,H=0,dpr=1,N=0,NL=0,ds=1.5,lastW=0,lastSH=0,heroH=0,logoCX=0,logoCY=0,splitTop=0,splitBot=0;
+  let X,Y,VX,VY,TX,TY,TXT,TYT,SX,SY,AX,AY,FX,FY,PX,PY,WX,WY,DL,DM,PH,F;
+  let LF,LFT,ROLE;
+  let EN=0,EA,EB,EL,EP,EQ,EC;
+
+  function build(){
+    const sy = window.scrollY || 0;
+    const cr = cv.getBoundingClientRect(); W = cr.width; H = cr.height;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+    lastW = innerWidth; lastSH = root.scrollHeight; heroH = hero.offsetHeight;
+
+    /* لوگو */
+    const sr = slot.getBoundingClientRect();
+    const sw = sr.width, sh = sr.height, ox = sr.left, oy = sr.top + sy;
+    logoCX = ox + sw/2; logoCY = oy + sh/2;
+    const step = Math.max(2, sw/100) * (lowEnd ? 1.35 : 1);
+    ds = Math.max(1.3, step*.68);
+
+    const off = document.createElement("canvas");
+    off.width = Math.ceil(sw); off.height = Math.ceil(sh);
+    const c = off.getContext("2d"); const s = sw/VBW; c.scale(s,s); c.fill(LOGO);
+    const img = c.getImageData(0,0,off.width,off.height).data, pts = [];
+    for (let y=step/2; y<sh; y+=step) for (let x=step/2; x<sw; x+=step){
+      const jx = x + (Math.random()-.5)*step*.7, jy = y + (Math.random()-.5)*step*.7;
+      const ix = clamp(jx|0,0,off.width-1), iy = clamp(jy|0,0,off.height-1);
+      if (img[(iy*off.width+ix)*4+3] > 128) pts.push(ox+jx, oy+jy);
+    }
+    NL = pts.length/2;
+    N  = NL + Math.round(Math.min(420, W*H/700));
+
+    [X,Y,VX,VY,TX,TY,TXT,TYT,SX,SY,AX,AY,FX,FY,PX,PY,WX,WY,DL,DM,PH,F] =
+      Array.from({length:22}, () => new Float32Array(N));
+    LF = new Uint8Array(N); LFT = new Uint8Array(N); ROLE = new Uint8Array(N);
+
+    for (let i=0; i<N; i++){
+      AX[i] = Math.random()*W;  AY[i] = Math.random()*H;          // لنگر نویز: ثابت نسبت به صفحه‌ی نمایش
+      FX[i] = .15+Math.random()*.5; FY[i] = .15+Math.random()*.5;
+      PX[i] = Math.random()*6.283;  PY[i] = Math.random()*6.283;
+      WX[i] = 8+Math.random()*34;   WY[i] = 8+Math.random()*34;
+      PH[i] = Math.random()*6.283;  DM[i] = Math.random();
+      if (i < NL){
+        TX[i] = pts[2*i]; TY[i] = pts[2*i+1];
+        DL[i] = (1 - (TX[i]-ox)/sw)*.5 + Math.random()*.5;          // راست زودتر، چپ دیرتر
+        LF[i] = TX[i] < logoCX ? 1 : 0;
+        X[i] = (o > .5 && hv > .5) ? TX[i] : AX[i];
+        Y[i] = (o > .5 && hv > .5) ? TY[i] : AY[i] + sy;
+      } else { X[i] = AX[i]; Y[i] = AY[i] + sy; }
+    }
+
+    buildText(sy);
+    buildStages(sy);
+    buildEdges(ox, sw);
+  }
+
+  /* هدف دوم ذرات: نوشته‌ی NOISE / MIND */
+  function buildText(){
+    const availW = Math.min(W - 48, 340);
+    const fam = 'system-ui,-apple-system,"Segoe UI",Arial,sans-serif';
+    const probe = document.createElement("canvas").getContext("2d");
+    probe.font = "800 100px " + fam;
+    const wmax = Math.max(probe.measureText("NOISE").width, probe.measureText("MIND").width);
+    const fs = Math.min(96, 100*availW/wmax);
+    const tw = Math.ceil(availW+8), th = Math.ceil(fs*2.3);
+    const oc = document.createElement("canvas"); oc.width = tw; oc.height = th;
+    const c = oc.getContext("2d");
+    c.font = "800 " + fs + "px " + fam; c.textAlign = "center"; c.textBaseline = "middle"; c.fillStyle = "#fff";
+    c.fillText("NOISE", tw/2, th/2 - fs*.56); c.fillText("MIND", tw/2, th/2 + fs*.56);
+    const img = c.getImageData(0,0,tw,th).data;
+    let step = Math.max(2, ds/.68), pts = [];
+    for (let k=0; k<9; k++){
+      pts = [];
+      for (let y=step/2; y<th; y+=step) for (let x=step/2; x<tw; x+=step){
+        const jx = x + (Math.random()-.5)*step*.7, jy = y + (Math.random()-.5)*step*.7;
+        const ix = clamp(jx|0,0,tw-1), iy = clamp(jy|0,0,th-1);
+        if (img[(iy*tw+ix)*4+3] > 128) pts.push([logoCX - tw/2 + jx, logoCY - th/2 + jy, jy < th/2 ? 1 : 0]);
+      }
+      if (pts.length >= NL) break;
+      step *= .86;
+    }
+    shuffle(pts);
+    while (pts.length < NL){ const p = pts[(Math.random()*pts.length)|0]; pts.push([p[0]+(Math.random()-.5)*2, p[1]+(Math.random()-.5)*2, p[2]]); }
+    pts.length = NL;
+    pts.sort((a,b) => a[0]-b[0]);
+    const idx = Array.from({length:NL}, (_,i) => i).sort((a,b) => TX[a]-TX[b]);
+    for (let k=0; k<NL; k++){ const i = idx[k]; TXT[i] = pts[k][0]; TYT[i] = pts[k][1]; LFT[i] = pts[k][2]; }
+  }
+
+  /* هدف سوم ذرات: صحنه‌ی آشوب (چپ) و شبکه‌ی منظم (راست) */
+  function buildStages(sy){
+    ROLE.fill(0);
+    const sb = splitEl.getBoundingClientRect(); splitTop = sb.top + sy; splitBot = sb.bottom + sy;
+    const a = stL.getBoundingClientRect(), b = stR.getBoundingClientRect();
+    if (!a.width || !b.width) return;
+    const gs = 6, inset = 3, grid = [];
+    for (let y=inset+gs/2; y<b.height-inset; y+=gs) for (let x=inset+gs/2; x<b.width-inset; x+=gs) grid.push([b.left+x, b.top+sy+y]);
+    shuffle(grid);
+    const L = [], R = [];
+    for (let i=0; i<NL; i++) (LF[i] ? L : R).push(i);
+    shuffle(L); shuffle(R);
+    const n = Math.min(grid.length, L.length, R.length);
+    for (let k=0; k<n; k++){
+      const r = R[k]; ROLE[r] = 2; SX[r] = grid[k][0]; SY[r] = grid[k][1];
+      const l = L[k]; ROLE[l] = 1;
+      SX[l] = a.left + inset + 8 + Math.random()*(a.width - 2*inset - 16);
+      SY[l] = a.top + sy + inset + 8 + Math.random()*(a.height - 2*inset - 16);
+    }
+  }
+
+  /* سیناپس‌ها: خطوط نازک بین ذرات نزدیک؛ بین دو نیمه هم پل می‌زنند */
+  function buildEdges(ox, sw){
+    const cell = 40, gm = new Map();
+    for (let i=0; i<NL; i++){ const k = ((TX[i]/cell)|0) + "," + ((TY[i]/cell)|0); (gm.get(k) || gm.set(k,[]).get(k)).push(i); }
+    const near = (i, lo, hi, ok) => {
+      const cx = (TX[i]/cell)|0, cy = (TY[i]/cell)|0, cand = [];
+      for (let dx=-1; dx<=1; dx++) for (let dy=-1; dy<=1; dy++){
+        const arr = gm.get((cx+dx)+","+(cy+dy)); if (!arr) continue;
+        for (const j of arr){ if (j===i || (ok && !ok(j))) continue;
+          const d = Math.hypot(TX[j]-TX[i], TY[j]-TY[i]); if (d>=lo && d<=hi) cand.push(j); }
+      }
+      return cand.length ? cand[(Math.random()*cand.length)|0] : -1;
+    };
+    const M = Math.min(650, Math.round(NL*.18)), C = 70, cap = M + C;
+    EA = new Uint16Array(cap); EB = new Uint16Array(cap);
+    EL = new Float32Array(cap); EP = new Float32Array(cap); EQ = new Float32Array(cap); EC = new Uint8Array(cap);
+    EN = 0;
+    const add = (i,j,cross) => { EA[EN]=i; EB[EN]=j; EL[EN]=Math.hypot(TX[j]-TX[i],TY[j]-TY[i]);
+      EP[EN]=Math.random()*6.283; EQ[EN]=Math.random()*.9; EC[EN]=cross?1:0; EN++; };
+    for (let k=0; k<M; k++){ const i = (Math.random()*NL)|0, j = near(i,8,22); if (j>=0) add(i,j,false); }
+    const mids = []; for (let i=0; i<NL; i++) if (LF[i] && TX[i] > logoCX - 60) mids.push(i);
+    for (let k=0; k<C && mids.length; k++){ const i = mids[(Math.random()*mids.length)|0], j = near(i,8,34,j => !LF[j]); if (j>=0) add(i,j,true); }
+  }
+
+  /* ───── صدا ───── */
+  const snd = { a:null, on:false };
+  function initAudio(){
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    const a = new AC();
+    const len = a.sampleRate*2, buf = a.createBuffer(1,len,a.sampleRate), d = buf.getChannelData(0);
+    for (let i=0; i<len; i++) d[i] = Math.random()*2-1;
+    const ns = a.createBufferSource(); ns.buffer = buf; ns.loop = true;
+    const lp = a.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 6000;
+    const ng = a.createGain(); ng.gain.value = 0;
+    ns.connect(lp); lp.connect(ng);
+    const tg = a.createGain(); tg.gain.value = 0;
+    [[110,0,1],[164.81,3,1],[220,-4,1],[329.63,2,.35]].forEach(([f,cent,gv]) => {
+      const os = a.createOscillator(); os.type = "sine"; os.frequency.value = f; os.detune.value = cent;
+      const g = a.createGain(); g.gain.value = gv; os.connect(g); g.connect(tg); os.start();
+    });
+    const master = a.createGain(); master.gain.value = 0;
+    ng.connect(master); tg.connect(master); master.connect(a.destination);
+    ns.start();
+    snd.a = a; snd.ng = ng; snd.tg = tg; snd.lp = lp; snd.master = master;
+    return true;
+  }
+  function blip(freq){
+    if (!snd.on || !snd.a) return;
+    const a = snd.a, T = a.currentTime, os = a.createOscillator(), g = a.createGain();
+    os.type = "sine"; os.frequency.setValueAtTime(freq, T); os.frequency.exponentialRampToValueAtTime(freq*1.5, T+.12);
+    g.gain.setValueAtTime(.0001, T); g.gain.exponentialRampToValueAtTime(.08, T+.01); g.gain.exponentialRampToValueAtTime(.0001, T+.35);
+    os.connect(g); g.connect(snd.master); os.start(T); os.stop(T+.4);
+  }
+  sndBtn.addEventListener("click", () => {
+    if (!snd.a && !initAudio()) { sndBtn.hidden = true; return; }
+    snd.on = !snd.on;
+    if (snd.on && snd.a.state === "suspended") snd.a.resume();
+    if (!snd.on) snd.master.gain.setTargetAtTime(0, snd.a.currentTime, .1);
+    sndBtn.setAttribute("aria-pressed", snd.on);
+    sndBtn.textContent = snd.on ? "صدا: روشن" : "صدا: خاموش";
+  });
+  let dsm = 0;
+  function updateAudio(){
+    if (!snd.on || !snd.a) return;
+    const T = snd.a.currentTime;
+    snd.ng.gain.setTargetAtTime(Math.pow(1-oe,1.3)*.14 + dsm*.04, T, .08);
+    snd.lp.frequency.setTargetAtTime(500 + (1-oe)*6500, T, .1);
+    snd.tg.gain.setTargetAtTime(Math.pow(oe,1.6)*.06, T, .15);
+    snd.master.gain.setTargetAtTime(.25 + .75*hv, T, .15);
+  }
+
+  /* ───── تکان گوشی ───── */
+  let motionOK = false, lastA = null;
+  function onMotion(e){
+    const a = e.accelerationIncludingGravity; if (!a || a.x == null) return;
+    if (!motionOK){ motionOK = true; hint2.hidden = false; motionBtn.hidden = true; }
+    if (lastA){
+      const j = Math.hypot(a.x-lastA.x, a.y-lastA.y, a.z-lastA.z);
+      shake = Math.min(1, shake + clamp((j-6)/20)*.3);
+    }
+    lastA = {x:a.x, y:a.y, z:a.z};
+  }
+  if (typeof DeviceMotionEvent !== "undefined"){
+    if (typeof DeviceMotionEvent.requestPermission === "function"){
+      motionBtn.hidden = false;
+      motionBtn.addEventListener("click", () => {
+        DeviceMotionEvent.requestPermission().then(r => {
+          if (r === "granted"){ addEventListener("devicemotion", onMotion); motionBtn.hidden = true; }
+        }).catch(() => {});
+      });
+    } else addEventListener("devicemotion", onMotion);
+  }
+
+  /* ───── رابط ───── */
+  function paintUI(){
+    const v = oe.toFixed(3);
+    if (v === lastV) return;
+    lastV = v;
+    hero.style.setProperty("--o", v);
+    mix.style.setProperty("--p", "calc(15px + (100% - 30px) * " + v + ")");
+    if (!dragging) mix.value = Math.round(oe*100);
+    const noisy = oe < .98;
+    if (noisy !== lastNoisy){ hero.classList.toggle("noisy", noisy); lastNoisy = noisy; }
+    mix.setAttribute("aria-valuetext", oe < .15 ? "نویز" : oe > .85 ? "ذهن" : "بین نویز و ذهن");
+  }
+  mix.addEventListener("input", () => { auto.on = false; o = mix.value/100; });
+  mix.addEventListener("pointerdown", () => { dragging = true; });
+  ["pointerup","pointercancel","blur"].forEach(ev => mix.addEventListener(ev, () => { dragging = false; }));
+
+  const interactive = el => el.closest && el.closest("a,button,input,.mixer");
+  addEventListener("pointermove", e => { if (interactive(e.target)) { ptr.on = false; return; } ptr.cx = e.clientX; ptr.cy = e.clientY; ptr.on = true; });
+  addEventListener("pointerdown", e => {
+    if (interactive(e.target)) { down = null; return; }
+    ptr.cx = e.clientX; ptr.cy = e.clientY; ptr.on = true;
+    down = { x:e.clientX, y:e.clientY, t:performance.now() };
+  });
+  addEventListener("pointerup", e => {
+    ptr.on = false;
+    if (down && hv > .6 && Math.hypot(e.clientX-down.x, e.clientY-down.y) < 10 && performance.now()-down.t < 450){
+      const sy = window.scrollY || 0;
+      if (Math.abs(e.clientX - logoCX) < 175 && Math.abs(e.clientY - (logoCY - sy)) < 125){
+        mT = mT ? 0 : 1; hero.classList.toggle("as-text", mT === 1); blip(mT ? 523 : 392);
+      }
+    }
+    down = null;
+  });
+  addEventListener("pointercancel", () => { ptr.on = false; down = null; });
+  root.addEventListener("pointerleave", () => { ptr.on = false; });
+
+  /* ───── حلقه‌ی اصلی ───── */
+  const R = 72, R2 = R*R, PUSH = 4.2;
+  let raf = 0, last = 0;
+
+  function frame(now){
+    raf = 0;
+    if (document.hidden) return;
+    const dt = Math.min(.05, last ? (now-last)/1000 : .016); last = now;
+    const t = now/1000;
+    const sy = window.scrollY || 0;
+
+    if (auto.on){
+      if (!auto.t0) auto.t0 = now + auto.delay;
+      const p = clamp((now - auto.t0)/auto.dur);
+      o = p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+      if (p >= 1) auto.on = false;
+    }
+    shake *= Math.exp(-dt*1.6); if (shake < .005) shake = 0;
+    oe = o*(1-shake);
+    m += clamp(mT - m, -dt/1.8, dt/1.8);
+    hv = 1 - sstep(0, heroH*.55, sy);
+    sp = sstep(innerHeight*.98, innerHeight*.55, splitTop - sy) * sstep(0, innerHeight*.25, splitBot - sy) * (1 - shake*.9);
+    dsm += ((ptr.on ? 1 : 0) - dsm)*.1;
+    paintUI(); updateAudio();
+
+    const px = ptr.cx, py = ptr.cy + sy;
+    const wm = 1 + shake*3, vh = innerHeight, h = ds/2;
+    const pa = new Path2D(), pb = new Path2D(), pd = new Path2D(), ps = new Path2D();
+
+    for (let i=0; i<N; i++){
+      const ax = AX[i] + Math.sin(t*FX[i] + PX[i])*WX[i]*wm;
+      const ay = AY[i] + sy + Math.cos(t*FY[i] + PY[i])*WY[i]*wm;
+      let gx = ax, gy = ay, f = 0, jit = 0;
+
+      if (i < NL){
+        let u = clamp((oe - DL[i]*.55)/.45); const hf = u*u*(3-2*u)*hv;
+        if (hf > 0){
+          let tx = TX[i], ty = TY[i], lf = LF[i];
+          if (m > 0){
+            let pm = clamp((m - DM[i]*.5)/.5); pm = pm*pm*(3-2*pm);
+            tx += (TXT[i]-tx)*pm; ty += (TYT[i]-ty)*pm; if (pm > .5) lf = LFT[i];
+          }
+          gx += (tx-gx)*hf; gy += (ty-gy)*hf; f = hf;
+          if (hf > .97 && lf){ gx += Math.sin(t*9 + PH[i]*5)*1.1; gy += Math.cos(t*8 + PH[i]*3)*1.1; }
+        }
+        const role = ROLE[i];
+        if (role && sp > 0){
+          let sx = SX[i], sy2 = SY[i];
+          if (role === 1){ sx += Math.sin(t*FX[i]*3 + PX[i])*7; sy2 += Math.cos(t*FY[i]*3 + PY[i])*7; jit = sp*1.8; }
+          gx += (sx-gx)*sp; gy += (sy2-gy)*sp;
+          f = f*(1-sp) + sp*(role === 2 ? 1 : .5);
+        }
+      }
+      F[i] = f;
+      const fz = Math.max((1-f)*1.6, jit);
+      gx += (Math.random()-.5)*fz; gy += (Math.random()-.5)*fz;
+
+      const k = .04 + .08*f;
+      let vx = (VX[i] + (gx - X[i])*k)*.8;
+      let vy = (VY[i] + (gy - Y[i])*k)*.8;
+      if (ptr.on){
+        const dx = X[i]-px, dy = Y[i]-py, d2 = dx*dx + dy*dy;
+        if (d2 < R2 && d2 > .01){ const d = Math.sqrt(d2), g = (1-d/R)*(1-d/R)*PUSH; vx += dx/d*g; vy += dy/d*g; }
+      }
+      VX[i] = vx; VY[i] = vy; X[i] += vx; Y[i] += vy;
+
+      const y = Y[i]-h; if (y < sy-6 || y > sy+vh+6) continue;
+      const x = X[i]-h;
+      if (i >= NL) ps.rect(x,y,ds,ds);
+      else if (f > .97 && vx*vx + vy*vy < 1.5){
+        if (Math.sin(t*11 + PH[i]*40) > .96 && ((m < .5 ? LF[i] : LFT[i]) && sp < .5)) continue;   // سوسوی نیمه‌ی NOISE
+        pa.rect(x,y,ds,ds);
+      }
+      else if (f > .4) pb.rect(x,y,ds,ds);
+      else (hv > .5 ? pd : ps).rect(x,y,ds,ds);
+    }
+
+    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.setTransform(dpr,0,0,dpr,0,-sy*dpr);
+
+    // سیناپس‌ها (زیر ذرات)
+    const ea = sstep(.7,1,oe)*hv*(1-m)*(1-sp);
+    if (ea > .02 && EN > 0){
+      const pl = new Path2D(), pf = new Path2D(), pdot = new Path2D();
+      for (let e=0; e<EN; e++){
+        const a = EA[e], b = EB[e];
+        if (F[a] < .92 || F[b] < .92) continue;
+        const dx = X[b]-X[a], dy = Y[b]-Y[a], lim = EL[e]*2.2 + 5;
+        if (dx*dx + dy*dy > lim*lim) continue;
+        if (Y[a] < sy-30 || Y[a] > sy+vh+30) continue;
+        pl.moveTo(X[a],Y[a]); pl.lineTo(X[b],Y[b]);
+        const fire = Math.pow(Math.max(0, Math.sin(t*(1.1+EQ[e]) + EP[e])), 28);
+        if (fire > .2){ pf.moveTo(X[a],Y[a]); pf.lineTo(X[b],Y[b]); }
+        if (EC[e]){ const q = (t*.45 + EP[e]*.159)%1; pdot.rect(X[a]+dx*q-ds*.7, Y[a]+dy*q-ds*.7, ds*1.4, ds*1.4); }
+      }
+      ctx.lineWidth = .8;
+      ctx.strokeStyle = "rgba(244,244,241," + (.08*ea).toFixed(3) + ")"; ctx.stroke(pl);
+      ctx.strokeStyle = "rgba(244,244,241," + (.7*ea).toFixed(3) + ")";  ctx.stroke(pf);
+      ctx.fillStyle   = "rgba(244,244,241," + (.95*ea).toFixed(3) + ")"; ctx.fill(pdot);
+    }
+
+    ctx.fillStyle = "rgba(244,244,241,.22)"; ctx.fill(ps);
+    ctx.fillStyle = "rgba(244,244,241,.38)"; ctx.fill(pd);
+    ctx.fillStyle = "rgba(244,244,241,.65)"; ctx.fill(pb);
+    ctx.fillStyle = "rgba(244,244,241,.96)"; ctx.fill(pa);
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  function sync(){
+    if (document.hidden){ if (snd.a && snd.on) snd.a.suspend(); return; }
+    if (snd.a && snd.on && snd.a.state === "suspended") snd.a.resume();
+    last = 0; if (!raf) raf = requestAnimationFrame(frame);
+  }
+  document.addEventListener("visibilitychange", sync);
+
+  let rt;
+  const maybeRebuild = () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => {
+      if (Math.abs(innerWidth - lastW) > 1 || Math.abs(root.scrollHeight - lastSH) > 60) build();
+    }, 150);
+  };
+  new ResizeObserver(maybeRebuild).observe(document.body);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+  addEventListener("load", build);
+
+  build(); paintUI(); sync();
+})();
+</script>
+</body>
+</html>

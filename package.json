@@ -1,0 +1,8 @@
+{
+  "name": "factorino-invoice-maker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline-first Persian invoice maker with a standalone Pro license service",
+  "scripts": { "start": "node --env-file-if-exists=.env server.js" },
+  "engines": { "node": ">=22.5" }
+}
